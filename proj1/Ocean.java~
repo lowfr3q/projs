@@ -29,8 +29,10 @@ public class Ocean {
    *  Define any variables associated with an Ocean object here.  These
    *  variables MUST be private.
    */
-
-
+    private int width;
+    private int height;
+    private int starveTime;
+    private int[][] myOcean;
 
   /**
    *  The following methods are required for Part I.
@@ -44,9 +46,21 @@ public class Ocean {
    *  @param starveTime is the number of timesteps sharks survive without food.
    */
 
-  public Ocean(int i, int j, int starveTime) {
-    // Your solution here.
-  }
+    public Ocean(int i, int j, int starveTime) {
+	this.width = i;
+	this.height = j;
+	this.starveTime = starveTime;
+	myOcean  = new int[i][j];
+	for (int x = 0; x < width(); x++) {
+	    for (int y = 0; y < height(); y++) {
+		myOcean[x][y] = -2;  //initialize to EMPTY (-2)
+	    }
+	}
+	System.out.println("Final Static Type:" + cellContents(i-1,j-1));
+	System.out.println("Actual Array Value" + myOcean[i-1][j-1]);
+
+    }
+
 
   /**
    *  width() returns the width of an Ocean object.
@@ -54,8 +68,7 @@ public class Ocean {
    */
 
   public int width() {
-    // Replace the following line with your solution.
-    return 1;
+      return width;
   }
 
   /**
@@ -64,8 +77,7 @@ public class Ocean {
    */
 
   public int height() {
-    // Replace the following line with your solution.
-    return 1;
+      return height;
   }
 
   /**
@@ -74,8 +86,7 @@ public class Ocean {
    */
 
   public int starveTime() {
-    // Replace the following line with your solution.
-    return 1;
+      return starveTime;
   }
 
   /**
@@ -86,7 +97,11 @@ public class Ocean {
    */
 
   public void addFish(int x, int y) {
-    // Your solution here.
+      int[] converted = convertXY(x , y); //convert to correct coordinates
+      int i = converted[0];
+      int j = converted[1]; 
+	  myOcean[i][j] = -1; //insert fish value (-1) into myOcean array
+      
   }
 
   /**
@@ -98,8 +113,12 @@ public class Ocean {
    */
 
   public void addShark(int x, int y) {
-    // Your solution here.
-  }
+      int[] converted = convertXY(x , y); //convert to correct coordinates
+      int i = converted[0];
+      int j = converted[1];
+	  myOcean[i][j] = starveTime(); //insert well-fed shark (value of starveTime) into myOcean array
+      }
+
 
   /**
    *  cellContents() returns EMPTY if cell (x, y) is empty, FISH if it contains
@@ -108,19 +127,116 @@ public class Ocean {
    *  @param y is the y-coordinate of the cell whose contents are queried.
    */
 
-  public int cellContents(int x, int y) {
-    // Replace the following line with your solution.
-    return EMPTY;
+  public int cellContents(int x, int y) {     
+      int[] converted = convertXY(x , y); //convert to correct coordinates
+      int i = converted[0];
+      int j = converted[1];
+      int inspect = myOcean[i][j]; //look at value of {i,j} on myOcean array
+      if (inspect == -2) { //if value is -2, cell contains EMPTY (final int 0)
+	  return EMPTY;
+      } else if (inspect == -1) { //if value is -1, cell contains FISH (final int 2)
+	  return FISH;
+      } else { //if value is 0 or greater, cell contains SHARK (final int 1)
+	  return SHARK;
+      }
   }
 
+    /**convertXY() uses modular arithmetic to convert wrapped x,y Ocean coordinates to a regular format **/
+
+    private int[] convertXY(int x, int y) {
+	int[] holder = new int[2]; //create holder for converted x,y values
+	if (x > width - 1) { 
+	    holder[0] = x % width();  
+	} else if (x < 0) { 
+	    while (x < 0) {
+		x = x + width();
+	    }
+	    holder[0] = x; //set 0th index to converted x
+	} else {
+	    holder[0] = x;
+	}
+	if (y > height - 1) {
+	    holder[1] = y % height();
+	} else if (y < 0) {
+	    while (y < 0) {
+		y = y + height();
+	    }
+	    holder[1] = y; //set 1st index to converted y
+	} else { 
+	    holder[1] = y;
+	}
+	return holder; //return holder{x,y}
+    }
+
+    /**neighbors() takes a x,y cell coordinate and returns an int[2] containing the amount of neighboring
+       fish and sharks respectively **/
+
+    private int[] neighbors(int x, int y) {
+	int fishCount = 0;
+	int sharkCount = 0;
+	int emptyCount = 0;
+        int top = cellContents(x, y - 1);
+        int topLeft = cellContents(x - 1, y - 1);
+	int left = cellContents(x - 1, y);
+	int bottomLeft = cellContents(x - 1, y + 1);
+        int bottom = cellContents(x, y + 1);
+	int bottomRight = cellContents(x + 1, y + 1);
+        int right = cellContents(x + 1, y);
+        int topRight = cellContents(x + 1, y - 1);
+	int[] perimeter = {top, topLeft, left, bottomLeft, bottom, bottomRight, right, topRight};
+	for (int i = 0; i < 8; i++) {
+	    if (perimeter[i] == EMPTY) {
+		emptyCount++;
+	    } else if (perimeter[i] == SHARK) {
+		sharkCount++;
+	    } else if (perimeter[i] == FISH) {
+		fishCount++;
+	    }
+	}
+	int[] emptyFishShark = {emptyCount, fishCount, sharkCount}; //create array containing amount of neighboring empty, fish, and shark cells
+	return emptyFishShark; 
+
+    }
+      
   /**
    *  timeStep() performs a simulation timestep as described in README.
    *  @return an ocean representing the elapse of one timestep.
    */
 
   public Ocean timeStep() {
-    // Replace the following line with your solution.
-    return new Ocean(1, 1, 1);
+      System.out.println("Timestepping...");
+      Ocean afterStep = new Ocean(width, height, starveTime);  //create a new blank ocean to hold the new cell values after timeStep()
+      for (int i = 0; i < width; i++) {
+	  for (int j = 0; j < height; j++) {
+	      int cellName = this.cellContents(i,j);  
+	      int cellValue = this.myOcean[i][j];
+	      int[] neighbors = this.neighbors(i,j);
+	      if (cellName == EMPTY) {
+		  if (neighbors[1] >= 2 && neighbors[2] < 2) {
+		      afterStep.addFish(i,j);
+		  } else if (neighbors[1] >= 2 && neighbors[2] >= 2) {
+		      afterStep.addShark(i,j);
+		  } else {
+		      afterStep.myOcean[i][j] = -2;
+		  }
+	      } else if (cellName == SHARK) {               //if item in the Ocean cell is a Shark, then check neighbors
+		  if (neighbors[1] > 0) {                   //if Shark has 1 or more fish neighbors
+		      afterStep.addShark(i,j);              //then feed Shark (set value to starveTime)
+		  } else if (this.myOcean[i][j] == 0) {     //if Shark has no fish neighbors and is starved
+		      afterStep.myOcean[i][j] = -2;         //then kill Shark (set to empty)
+		  } else {                                  //else Shark gets hungrier
+		      afterStep.myOcean[i][j] = cellValue--;
+		  }
+	      } else if (cellName == FISH) {
+		  if (neighbors[2] == 1) {
+		      afterStep.myOcean[i][j] = -2;
+		  } else if (neighbors[2] >= 2) {
+		      afterStep.addShark(i,j);
+		  }
+	      }
+	  }
+      }
+      return afterStep;
   }
 
   /**
@@ -165,5 +281,21 @@ public class Ocean {
     // Replace the following line with your solution.
     return 0;
   }
+
+
+public static void main(String[] args) {
+	Ocean test  = new Ocean(2, 2, 0);
+	int[] holder = new int[4];
+	int[] holder2 = new int[2];
+	test.addFish(0,0);
+	test.addShark(0,1);
+	holder[0] =	test.cellContents(0,0);
+	holder[1] = test.cellContents(0,1);
+	holder2 = test.convertXY(3,3);
+	System.out.println(holder2[0] + holder2[1]);
+	System.out.println(holder[0]);
+	System.out.println(holder[1]);
+
+}
 
 }

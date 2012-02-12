@@ -56,10 +56,11 @@ public class Ocean {
 		myOcean[x][y] = -2;  //initialize to EMPTY (-2)
 	    }
 	}
-	System.out.println(cellContents(i-1,j-1));
-	System.out.println(myOcean[i-1][j-1]);
+	System.out.println("Final Static Type:" + cellContents(i-1,j-1));
+	System.out.println("Actual Array Value" + myOcean[i-1][j-1]);
 
     }
+
 
   /**
    *  width() returns the width of an Ocean object.
@@ -151,6 +152,8 @@ public class Ocean {
 		x = x + width();
 	    }
 	    holder[0] = x; //set 0th index to converted x
+	} else {
+	    holder[0] = x;
 	}
 	if (y > height - 1) {
 	    holder[1] = y % height();
@@ -159,6 +162,8 @@ public class Ocean {
 		y = y + height();
 	    }
 	    holder[1] = y; //set 1st index to converted y
+	} else { 
+	    holder[1] = y;
 	}
 	return holder; //return holder{x,y}
     }
@@ -199,6 +204,7 @@ public class Ocean {
    */
 
   public Ocean timeStep() {
+      System.out.println("Timestepping...");
       Ocean afterStep = new Ocean(width, height, starveTime);  //create a new blank ocean to hold the new cell values after timeStep()
       for (int i = 0; i < width; i++) {
 	  for (int j = 0; j < height; j++) {
@@ -219,13 +225,15 @@ public class Ocean {
 		  } else if (this.myOcean[i][j] == 0) {     //if Shark has no fish neighbors and is starved
 		      afterStep.myOcean[i][j] = -2;         //then kill Shark (set to empty)
 		  } else {                                  //else Shark gets hungrier
-		      afterStep.myOcean[i][j] = cellValue--;
+		      afterStep.myOcean[i][j] = this.myOcean[i][j] - 1;
 		  }
 	      } else if (cellName == FISH) {
 		  if (neighbors[2] == 1) {
 		      afterStep.myOcean[i][j] = -2;
 		  } else if (neighbors[2] >= 2) {
 		      afterStep.addShark(i,j);
+		  } else {
+		      afterStep.addFish(i,j);
 		  }
 	      }
 	  }
@@ -275,5 +283,21 @@ public class Ocean {
     // Replace the following line with your solution.
     return 0;
   }
+
+
+public static void main(String[] args) {
+	Ocean test  = new Ocean(2, 2, 0);
+	int[] holder = new int[4];
+	int[] holder2 = new int[2];
+	test.addFish(0,0);
+	test.addShark(0,1);
+	holder[0] =	test.cellContents(0,0);
+	holder[1] = test.cellContents(0,1);
+	holder2 = test.convertXY(3,3);
+	System.out.println(holder2[0] + holder2[1]);
+	System.out.println(holder[0]);
+	System.out.println(holder[1]);
+
+}
 
 }
