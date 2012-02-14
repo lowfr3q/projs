@@ -22,8 +22,11 @@
  */
 
 public class RunLengthEncoding {
-    private int encodingLength, width, height, size, starveTime;
+
+    private int starveTime;
+    private int encodingLength;
     private int runCount = 1;
+    private int size;
     private myListNode head;
 
 
@@ -65,14 +68,14 @@ public class RunLengthEncoding {
 
   public RunLengthEncoding(int i, int j, int starveTime,
                            int[] runTypes, int[] runLengths) {
-      this.encodingLength = runTypes.length;
+      int arrayRunLength = runTypes.length;
+      this.encodingLength = arrayRunLength;
       this.starveTime = starveTime;
-      this.width = i;
-      this.height = j;
-      for (int xx = 0; xx < runTypes.length; xx++) {
+
+      for (int xx = 0; xx < arrayRunLength; xx++) {
 	  Integer type = runTypes[xx];
 	  Integer amt = runLengths[xx];
-	  insertEnd(type, amt, starveTime);
+	  insertEnd(type, amt);
 	
       }
   }
@@ -153,42 +156,33 @@ public myListNode nth(int position) {
     }
  }
 
-
   /**
    *  insertFront() inserts item "obj" at the beginning of this list.
    *  @param obj the item to be inserted.
    **/
 
-    public void insertFront(Integer type, Integer amt, Integer sT) {
-	head = new myListNode(type, amt, sT, head);
+    public void insertFront(Integer type, Integer amt) {
+	head = new myListNode(type, amt, head);
       size++;
   }
-
-    public void insertFront(Integer type, Integer amt) {
-	insertFront(type, amt, null);
-    }
 
   /**
    *  insertEnd() inserts item "obj" at the end of this list.
    *  @param obj the item to be inserted.
    **/
 
-    public void insertEnd(Integer type, Integer amt, Integer sT) {
+    public void insertEnd(Integer type, Integer amt) {
     if (head == null) {
-	head = new myListNode(type, amt, sT);
+	head = new myListNode(type, amt);
     } else {
 	myListNode insert = head;
 	while (insert.next != null) {
 	    insert = insert.next;
 	}
-	insert.next = new myListNode(type , amt, sT);
+	insert.next = new myListNode(type , amt);
     }
     size++;
   }
-
-    public void insertEnd(Integer type, Integer amt) {
-	insertEnd(type, amt, null);
-    }
 
   /**
    *  toOcean() converts a run-length encoding of an ocean into an Ocean
@@ -198,42 +192,9 @@ public myListNode nth(int position) {
    */
 
   public Ocean toOcean() {
-      Ocean oceanHolder = new Ocean(width, height, starveTime);
-      int t, a;
-      int runningTotal = 0, count = 0;
-      for (myListNode start = head; start != null; start = start.next) {
-	  t = start.type;
-	  a = start.amt;
-	  runningTotal = runningTotal + a;
-	  while (count < runningTotal) {
-	      int[] xyCell = convertXY(count);
-	      int i = xyCell[0];;
-	      int j = xyCell[1];;
-	      switch (t) {
-	      case 1:
-		 int sT = start.starveTime;
-		  oceanHolder.addShark(i , j, sT);
-		  break;
-	      case 2:
-		  oceanHolder.addFish(i , j);
-		  break;
-	      }
-	      count++;
-	  }
-      }
-      return oceanHolder;
+    // Replace the following line with your solution.
+    return new Ocean(1, 1, 1);
   }
-	
-
-    public int[] convertXY(int xx) {
-	int i,j;
-	i = xx % width;
-	j = xx / width;
-	int[] converted = {i , j};
-	return converted;
-    }
-
-
 
   /**
    *  The following method is required for Part III.

@@ -56,8 +56,6 @@ public class Ocean {
 		myOcean[x][y] = -2;  //initialize to EMPTY (-2)
 	    }
 	}
-	System.out.println("Final Static Type:" + cellContents(i-1,j-1));
-	System.out.println("Actual Array Value" + myOcean[i-1][j-1]);
 
     }
 
@@ -260,7 +258,9 @@ public class Ocean {
    */
 
   public void addShark(int x, int y, int feeding) {
-    // Your solution here.
+      if (cellContents(x,y) == EMPTY) {
+	  myOcean[x][y] = feeding;
+      }
   }
 
   /**

@@ -56,8 +56,6 @@ public class Ocean {
 		myOcean[x][y] = -2;  //initialize to EMPTY (-2)
 	    }
 	}
-	System.out.println("Final Static Type:" + cellContents(i-1,j-1));
-	System.out.println("Actual Array Value" + myOcean[i-1][j-1]);
 
     }
 
@@ -225,13 +223,15 @@ public class Ocean {
 		  } else if (this.myOcean[i][j] == 0) {     //if Shark has no fish neighbors and is starved
 		      afterStep.myOcean[i][j] = -2;         //then kill Shark (set to empty)
 		  } else {                                  //else Shark gets hungrier
-		      afterStep.myOcean[i][j] = cellValue--;
+		      afterStep.myOcean[i][j] = this.myOcean[i][j] - 1;
 		  }
 	      } else if (cellName == FISH) {
 		  if (neighbors[2] == 1) {
 		      afterStep.myOcean[i][j] = -2;
 		  } else if (neighbors[2] >= 2) {
 		      afterStep.addShark(i,j);
+		  } else {
+		      afterStep.addFish(i,j);
 		  }
 	      }
 	  }

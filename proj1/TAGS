@@ -1,0 +1,116 @@
+
+Ocean.java,650
+public class Ocean 16,472
+    public Ocean(Ocean.Ocean49,1412
+  public int width(Ocean.width70,1935
+  public int height(Ocean.height79,2089
+  public int starveTime(Ocean.starveTime88,2299
+  public void addFish(Ocean.addFish99,2636
+  public void addShark(Ocean.addShark115,3269
+  public int cellContents(Ocean.cellContents130,3838
+    private int[] convertXY(Ocean.convertXY146,4506
+    private int[] neighbors(Ocean.neighbors174,5226
+  public Ocean timeStep(Ocean.timeStep206,6313
+  public void addShark(Ocean.addShark262,8777
+  public int sharkFeeding(Ocean.sharkFeeding282,9574
+public static void main(Ocean.main288,9690
+
+Ocean.java~,456
+public class Ocean 16,472
+    public Ocean(49,1412
+  public int width(70,1935
+  public int height(79,2089
+  public int starveTime(88,2299
+  public void addFish(99,2636
+  public void addShark(115,3269
+  public int cellContents(130,3838
+    private int[] convertXY(146,4506
+    private int[] neighbors(174,5226
+  public Ocean timeStep(206,6313
+  public void addShark(260,8721
+  public int sharkFeeding(280,9518
+public static void main(286,9634
+
+RunLengthEncoding.java,618
+public class RunLengthEncoding 24,1004
+  public RunLengthEncoding(RunLengthEncoding.RunLengthEncoding46,1625
+  public RunLengthEncoding(RunLengthEncoding.RunLengthEncoding67,2700
+  public void restartRuns(RunLengthEncoding.restartRuns95,3891
+  public TypeAndSize nextRun(RunLengthEncoding.nextRun108,4317
+  public Ocean toOcean(RunLengthEncoding.toOcean120,4727
+  public RunLengthEncoding(RunLengthEncoding.RunLengthEncoding136,5193
+  public void addFish(RunLengthEncoding.addFish155,5862
+  public void addShark(RunLengthEncoding.addShark172,6572
+  public void check(RunLengthEncoding.check184,6961
+
+SimText.java,128
+public class SimText 30,1072
+  public static void paint(SimText.paint44,1457
+  public static void main(SimText.main79,2374
+
+SimText.java~,101
+public class SimText 30,1072
+  public static void paint(44,1457
+  public static void main(79,2374
+
+Simulation.java,146
+public class Simulation 31,1106
+  private static void drawOcean(Simulation.drawOcean48,1640
+  public static void main(Simulation.main74,2570
+
+Test.class,17
+(LTest1;53,3246
+
+Test1.class,16
+(LOcean;18,313
+
+Test4.java,69
+public class Test4 3,18
+  public static void init(Test4.init8,120
+
+Testalike.java,255
+public class Testalike 11,161
+  public static void fishOcean(Testalike.fishOcean25,550
+  public static void sharkOcean(Testalike.sharkOcean48,1333
+  public static void paint(Testalike.paint81,2363
+  public static void main(Testalike.main116,3280
+
+Testalike.java~,183
+public class Testalike 11,161
+  public static void fishOcean(25,550
+  public static void sharkOcean(48,1333
+  public static void paint(81,2363
+  public static void main(116,3280
+
+TypeAndSize.java,87
+public class TypeAndSize 22,742
+  public TypeAndSize(TypeAndSize.TypeAndSize34,1196
+
+readme.txt,447
+                      Due 2pm Friday,3,97
+                      Due 2pm Friday, February 3,97
+This is an individual assignment;7,211
+move right,33,1547
+project.)  You can also refer to locations such as 35,1702
+the ocean at the beginning of the timestep,64,3345
+2) If a cell contains a shark,81,4338
+2) If a cell contains a shark, and none of its neighbors is a fish,81,4338
+hungrier during the timestep.  If this timestep is the 82,4414
+
+TypeAndSize.class,0
+
+Testalike.class,0
+
+Test4.class,0
+
+Test3.class,0
+
+Test2.class,0
+
+Simulation.class,0
+
+SimText.class,0
+
+RunLengthEncoding.class,0
+
+Ocean.class,0
