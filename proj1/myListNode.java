@@ -10,9 +10,9 @@
  */
 
 class myListNode {
-    Integer type;
-    Integer amt;
-    Integer starveTime;
+    int type;
+    int amt;
+    int starveTime;
     myListNode next;
 
   /**
@@ -20,10 +20,10 @@ class myListNode {
    *  item "obj".
    */
 
-    myListNode(Integer type, Integer amt, Integer sT) {
+    myListNode(int type, int amt, int sT) {
 	this.type = type;
 	this.amt = amt;
-	starveTime = sT;
+	this.starveTime = sT;
 	next = null;
   }
 
@@ -32,9 +32,10 @@ class myListNode {
    *  item "obj", whose next list node is to be "next".
    */
 
-    myListNode(Integer type, Integer amt, Integer sT, myListNode next) {
+    myListNode(int type, int amt, int sT, myListNode next) {
 	this.type = type;
 	this.amt = amt;
+	this.starveTime = sT;
 	this.next = next;
   }
 }

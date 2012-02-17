@@ -22,9 +22,10 @@
  */
 
 public class RunLengthEncoding {
-    private int encodingLength, width, height, size, starveTime;
+    private int encodingLength, width, height, size;
+    private int starveTime;
     private int runCount = 1;
-    private myListNode head;
+    private myListNode head = null;
 
 
   /**
@@ -43,6 +44,8 @@ public class RunLengthEncoding {
   public RunLengthEncoding(int i, int j, int starveTime) {
       this.encodingLength = 1;
       this.starveTime = starveTime;
+      this.width = i;
+      this.height = j;
       insertFront(0 , i * j);
   }
 
@@ -70,8 +73,8 @@ public class RunLengthEncoding {
       this.width = i;
       this.height = j;
       for (int xx = 0; xx < runTypes.length; xx++) {
-	  Integer type = runTypes[xx];
-	  Integer amt = runLengths[xx];
+	  int type = runTypes[xx];
+	  int amt = runLengths[xx];
 	  insertEnd(type, amt, starveTime);
 	
       }
@@ -113,7 +116,7 @@ public class RunLengthEncoding {
    */
 
   public TypeAndSize nextRun() {
-      Integer tempType, tempSize;
+      int tempType, tempSize;
       myListNode current = head;
       if (runCount <= encodingLength) {
 	  current = nth(runCount);
@@ -159,13 +162,13 @@ public myListNode nth(int position) {
    *  @param obj the item to be inserted.
    **/
 
-    public void insertFront(Integer type, Integer amt, Integer sT) {
+    private void insertFront(int type, int amt, int sT) {
 	head = new myListNode(type, amt, sT, head);
       size++;
   }
 
-    public void insertFront(Integer type, Integer amt) {
-	insertFront(type, amt, null);
+    private void insertFront(int type, int amt) {
+	insertFront(type, amt, -1);
     }
 
   /**
@@ -173,7 +176,7 @@ public myListNode nth(int position) {
    *  @param obj the item to be inserted.
    **/
 
-    public void insertEnd(Integer type, Integer amt, Integer sT) {
+    private void insertEnd(int type, int amt, int sT) {
     if (head == null) {
 	head = new myListNode(type, amt, sT);
     } else {
@@ -186,8 +189,8 @@ public myListNode nth(int position) {
     size++;
   }
 
-    public void insertEnd(Integer type, Integer amt) {
-	insertEnd(type, amt, null);
+    private void insertEnd(int type, int amt) {
+	insertEnd(type, amt, -1);
     }
 
   /**
@@ -198,6 +201,7 @@ public myListNode nth(int position) {
    */
 
   public Ocean toOcean() {
+      System.out.println(starveTime);
       Ocean oceanHolder = new Ocean(width, height, starveTime);
       int t, a;
       int runningTotal = 0, count = 0;
@@ -206,7 +210,7 @@ public myListNode nth(int position) {
 	  a = start.amt;
 	  runningTotal = runningTotal + a;
 	  while (count < runningTotal) {
-	      int[] xyCell = convertXY(count);
+	      int[] xyCell = convertToXY(count);
 	      int i = xyCell[0];;
 	      int j = xyCell[1];;
 	      switch (t) {
@@ -225,7 +229,7 @@ public myListNode nth(int position) {
   }
 	
 
-    public int[] convertXY(int xx) {
+    private int[] convertToXY(int xx) {
 	int i,j;
 	i = xx % width;
 	j = xx / width;
@@ -247,11 +251,55 @@ public myListNode nth(int position) {
    */
 
   public RunLengthEncoding(Ocean sea) {
-    // Your solution here, but you should probably leave the following line
-    //   at the end.
-    check();
+      int w = sea.width(), l = sea.height();
+      width = w;
+      height = l;
+      int seaLength =  w * l;
+      int eCount= 0, sCount = 0, fCount = 0;
+      int mark;
+      int[] converted;
+      for (int counter = 0; counter < seaLength; counter++) {
+	  converted = convertToXY(counter);
+	  int i = converted[0], j = converted[1];
+	  int cellType = sea.cellContents(i,j);
+	  switch (cellType) {
+	  case 0:
+	      sCount = 0;
+	      fCount = 0;
+	      eCount++;
+	      if (sea.cellContents(convertToXY(counter + 1)) != sea.EMPTY) {
+		  insertEnd(sea.EMPTY, eCount);
+		  eCount = 0;
+	      }
+	      break;
+	  case 1:
+	      eCount = 0;
+	      fCount = 0;
+	      if (sea.sharkFeeding(convertToXY(counter - 1)) == sea.sharkFeeding(i,j)) {
+		  sCount++;
+	      } else {
+		  sCount = 1;
+	      }
+	      if (sea.sharkFeeding(convertToXY(counter + 1)) != sea.sharkFeeding(i,j)) {
+		  insertEnd(sea.SHARK, sCount, sea.sharkFeeding(i,j));
+		  sCount = 0;
+	      }
+	      break;
+	  case 2:
+	      sCount = 0;
+	      eCount = 0;
+	      fCount++;
+	      if (sea.cellContents(convertToXY(counter + 1)) != sea.FISH) {
+		  insertEnd(sea.FISH, fCount);
+		  fCount = 0;
+	      }
+	      break;
+	  }
+      }
+      check();
   }
 
+     
   /**
    *  The following methods are required for Part IV.
    */
@@ -295,6 +343,25 @@ public myListNode nth(int position) {
    */
 
   public void check() {
-  }
+      myListNode starter = this.head;
+      int count = 0;
+      while (starter.next != null) {
+	  int t = starter.type, a = starter.amt, sT = starter.starveTime;
+	  int nextT = starter.next.type, nextA = starter.next.amt, nextSt = starter.next.starveTime;
+	  int[] current = {t,a, sT}, next = {nextT,nextA,nextSt};
+	  count = count + a;
+	  if (current == next) {
+	      System.out.println("Warning, problem found: recurring cells are next to eachother");
+	  }
+	  starter = starter.next;
+      }
+      if (count != width * height) {
+	  System.out.println("Warning: runEncodingLength != Ocean length");
+      }
+      
+}
 
+    public static void main(String[] args) {
+	Integer xx = null;
+	System.out.println(xx.intValue());}
 }

@@ -139,6 +139,12 @@ public class Ocean {
       }
   }
 
+    public int cellContents(int[] xy) {
+	int i = xy[0];
+	int j = xy[1];
+return	cellContents(i,j);
+    }
+
     /**convertXY() uses modular arithmetic to convert wrapped x,y Ocean coordinates to a regular format **/
 
     private int[] convertXY(int x, int y) {
@@ -280,9 +286,17 @@ public class Ocean {
    */
 
   public int sharkFeeding(int x, int y) {
-    // Replace the following line with your solution.
-    return 0;
+      if (cellContents(x,y) == SHARK) {
+	  return myOcean[x][y];
+      } else {
+	  return 0;
+      }
   }
+
+    public int sharkFeeding(int[] xy) {
+	int i = xy[0], j = xy[1];
+return	sharkFeeding(i,j);
+    }
 
 
 public static void main(String[] args) {
